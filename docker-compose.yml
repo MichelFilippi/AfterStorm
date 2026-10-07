@@ -1,0 +1,38 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: afterstorm-postgres
+    environment:
+      POSTGRES_DB: afterstorm
+      POSTGRES_USER: afterstorm
+      POSTGRES_PASSWORD: afterstorm_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - afterstorm_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U afterstorm -d afterstorm"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: afterstorm-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=afterstorm;Username=afterstorm;Password=afterstorm_dev
+      ReplayStorage__Path: /app/replays
+    ports:
+      - "8080:8080"
+    volumes:
+      - afterstorm_replays:/app/replays
+
+volumes:
+  afterstorm_postgres:
+  afterstorm_replays:
