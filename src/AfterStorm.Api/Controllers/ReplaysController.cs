@@ -25,15 +25,7 @@ public sealed class ReplaysController(ReplayImportService replayImportService) :
         }
         catch (InvalidOperationException ex)
         {
-            return Conflict(new { error = ex.Message });
-        }
-        catch (NotImplementedException ex)
-        {
-            return StatusCode(StatusCodes.Status501NotImplemented, new
-            {
-                error = ex.Message,
-                nextStep = "Connect the heroprotocol parser."
-            });
+            return BadRequest(new { error = ex.Message });
         }
     }
 }

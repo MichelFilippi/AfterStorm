@@ -20,6 +20,7 @@ public static class DependencyInjection
 
         var replayPath = configuration["ReplayStorage:Path"] ?? "replays";
 
+        services.Configure<HotsParserOptions>(configuration.GetSection("HotsParser"));
         services.AddSingleton<IReplayStorage>(_ => new LocalReplayStorage(replayPath));
         services.AddScoped<IReplayParser, StormReplayParser>();
         services.AddScoped<IMatchRepository, MatchRepository>();

@@ -14,4 +14,14 @@ public sealed class MatchRepository(AfterStormDbContext dbContext) : IMatchRepos
         dbContext.Matches.Add(match);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public Task<Match?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
+        dbContext.Matches
+            .AsNoTracking()
+            .Include(x => x.Players).ThenInclude(x => x.Talents)
+            .Include(x => x.Players).ThenInclude(x => x.DeathEvents)
+            .Include(x => x.Teams).ThenInclude(x => x.LevelEvents)
+            .Include(x => x.Teams).ThenInclude(x => x.XpSnapshots)
+            .Include(x => x.TimelineEvents)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 }

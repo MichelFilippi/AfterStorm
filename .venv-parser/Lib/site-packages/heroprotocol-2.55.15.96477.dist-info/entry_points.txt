@@ -1,0 +1,2 @@
+[console_scripts]
+heroprotocol = heroprotocol.heroprotocol:main

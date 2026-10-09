@@ -6,4 +6,5 @@ public interface IMatchRepository
 {
     Task<bool> ExistsByReplayHashAsync(string replayHash, CancellationToken cancellationToken = default);
     Task AddAsync(Match match, CancellationToken cancellationToken = default);
+    Task<Match?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
 }
